@@ -1,0 +1,58 @@
+[
+  {
+    "id": "TC-PAX8-001",
+    "ac": "AC1",
+    "text": "Given a product_id that exists in Pax8's catalog, When pax8_get_product(product_id) is called with valid credentials, Then the tool returns the Pax8 product record as JSON containing at least id, name, vendorName, shortDescription, sku",
+    "type": "auto",
+    "tests": ["tests/tools/test_products.py::test_get_product_returns_pax8_record"]
+  },
+  {
+    "id": "TC-PAX8-002",
+    "ac": "AC2",
+    "text": "Given a product_id that does not exist in Pax8 (Pax8 returns 404), When pax8_get_product(product_id) is called, Then the tool returns the string \"Error 404: <message>\", not a raw exception or stack trace",
+    "type": "auto",
+    "tests": ["tests/tools/test_products.py::test_get_product_passes_through_404"]
+  },
+  {
+    "id": "TC-PAX8-003",
+    "ac": "AC2",
+    "text": "Given Pax8 returns a 5xx error for a given product_id, When pax8_get_product(product_id) is called, Then the tool returns \"Error {status}: {message}\" and that string never contains the caller's Pax8 access token",
+    "type": "auto",
+    "tests": ["tests/tools/test_products.py::test_get_product_error_does_not_leak_token"]
+  },
+  {
+    "id": "TC-PAX8-004",
+    "ac": "AC3",
+    "text": "Given no Pax8 credentials are available for the current request (gateway mode with no X-Pax8-Token header, or env mode with PAX8_API_TOKEN unset), When pax8_get_product(product_id) is called, Then the tool returns the same \"Error: No Pax8 token configured...\" message the other 9 tools return, and Pax8 is never called",
+    "type": "auto",
+    "tests": ["tests/tools/test_products.py::test_get_product_without_credentials"]
+  },
+  {
+    "id": "TC-PAX8-005",
+    "ac": "AC4",
+    "text": "Given the tool's declared MCP schema, When a client omits the product_id argument on tools/call, Then the call is rejected as a parameter-validation error before any Pax8 API call is attempted (product_id has no default value)",
+    "type": "auto",
+    "tests": ["tests/tools/test_products.py::test_get_product_requires_product_id"]
+  },
+  {
+    "id": "TC-PAX8-006",
+    "ac": "AC5",
+    "text": "Given two concurrent pax8_get_product calls arrive with two different X-Pax8-Token header values (gateway mode), When both are in flight at the same time, Then each call's outbound request to Pax8 carries only its own token, with no cross-request bleed",
+    "type": "auto",
+    "tests": ["tests/tools/test_products.py::test_get_product_concurrent_requests_do_not_share_token"]
+  },
+  {
+    "id": "TC-PAX8-007",
+    "ac": "AC1",
+    "text": "Given a real Pax8 partner account and a known product_id, When pax8_get_product(product_id) is called through the deployed INT connector, Then the returned id/name/vendorName/shortDescription/sku match the Pax8 partner portal for that product_id",
+    "type": "manual",
+    "steps": [
+      "Obtain a real Pax8 partner API token and a known product_id (needs a real vendor account)",
+      "Call POST /mcp on the INT deployment with header X-Pax8-Token set, body tools/call pax8_get_product {\"product_id\": \"<id>\"}",
+      "Compare the returned id/name/vendorName/shortDescription/sku against the Pax8 partner portal for the same product_id"
+    ],
+    "expect": "Returned fields match the Pax8 partner portal exactly for that product_id",
+    "result": "untested",
+    "notes": "Needs a real Pax8 vendor account/token, not available during design. Not a blocker for this ticket per the vendor-mcp track rule (a missing vendor test account never blocks)."
+  }
+]
