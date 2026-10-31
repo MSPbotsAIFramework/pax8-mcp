@@ -1,0 +1,75 @@
+[
+  {
+    "id": "TC1",
+    "ac": "AC1",
+    "text": "Given a mocked 200 response from GET /v1/subscriptions/{id}, when pax8_get_subscription is called with that id, then the tool returns the mocked JSON body, pretty-printed and unmodified",
+    "type": "auto",
+    "tests": [
+      "tests/test_tools.py::test_get_subscription_returns_pax8_response_verbatim"
+    ],
+    "result": "pass",
+    "evidence": "13 passed in 1.41s (uv run pytest, dev/PRD-21600 synced with master@8d2d615)\ntests/test_tools.py::test_get_subscription_returns_pax8_response_verbatim PASSED\ntests/test_tools.py::test_get_subscription_maps_pax8_error_to_existing_error_format PASSED\ntests/test_tools.py::test_get_subscription_without_credentials_returns_no_token_message PASSED"
+  },
+  {
+    "id": "TC2",
+    "ac": "AC2",
+    "text": "Given Pax8 responds with a 404 for the given subscription id, when pax8_get_subscription is called, then the tool returns a string starting with 'Error 404:'",
+    "type": "auto",
+    "tests": [
+      "tests/test_tools.py::test_get_subscription_maps_pax8_error_to_existing_error_format"
+    ],
+    "result": "pass",
+    "evidence": "13 passed in 1.41s (uv run pytest, dev/PRD-21600 synced with master@8d2d615)\ntests/test_tools.py::test_get_subscription_returns_pax8_response_verbatim PASSED\ntests/test_tools.py::test_get_subscription_maps_pax8_error_to_existing_error_format PASSED\ntests/test_tools.py::test_get_subscription_without_credentials_returns_no_token_message PASSED"
+  },
+  {
+    "id": "TC3",
+    "ac": "AC3",
+    "text": "Given client_factory() returns None (no Pax8 credentials resolved for the request), when pax8_get_subscription is called, then the tool returns the exact _NO_TOKEN string and makes no HTTP call",
+    "type": "auto",
+    "tests": [
+      "tests/test_tools.py::test_get_subscription_without_credentials_returns_no_token_message"
+    ],
+    "result": "pass",
+    "evidence": "13 passed in 1.41s (uv run pytest, dev/PRD-21600 synced with master@8d2d615)\ntests/test_tools.py::test_get_subscription_returns_pax8_response_verbatim PASSED\ntests/test_tools.py::test_get_subscription_maps_pax8_error_to_existing_error_format PASSED\ntests/test_tools.py::test_get_subscription_without_credentials_returns_no_token_message PASSED"
+  },
+  {
+    "id": "TC4",
+    "ac": "AC4",
+    "text": "Given the shipped README.md, when the Tool List table is inspected, then it has a pax8_get_subscription row listing subscription_id as its key parameter",
+    "type": "manual",
+    "steps": [
+      "Open README.md on the merge commit that ships this ticket",
+      "Find the 'Tool List' table"
+    ],
+    "expect": "A row '| `pax8_get_subscription` | ... | `subscription_id` |' is present, placed after the pax8_list_subscriptions row",
+    "result": "pass",
+    "evidence": "README.md Tool List table on commit after merge: \"| `pax8_get_subscription` | Get a single subscription by id | `subscription_id` |\" present directly after the pax8_list_subscriptions row (verified via git diff and grep on README.md)."
+  },
+  {
+    "id": "TC5",
+    "ac": "AC5",
+    "text": "Given two concurrent gateway-mode requests carrying two different X-Pax8-Token values, when both call any tool (one or both pax8_get_subscription) concurrently, then each request's upstream call uses only its own token -- no cross-request token leakage",
+    "type": "manual",
+    "steps": [
+      "Would require two real Pax8 tenant tokens connected through the platform gateway",
+      "Fire both requests concurrently against the deployed service and inspect each outbound call's Authorization header"
+    ],
+    "expect": "Each outbound Pax8 call carries only the token of its own originating request",
+    "result": "blocked",
+    "evidence": "Not executable today: wiki ProductDocs/_connector-fields.md § P-2 (_verified_ 2026-08-31) records that the Pax8 connector's OAuth callback URL is not registered, so no tenant can complete a live Pax8 connection to obtain a real token. Covered instead at the unit level by the unchanged, pre-existing per-request contextvar in server.py (GatewayTokenMiddleware), which this ticket does not modify."
+  },
+  {
+    "id": "TC6",
+    "ac": "AC6",
+    "text": "Given an initialize -> tools/list call against the deployed service, when the tool list is inspected, then pax8_get_subscription appears with exactly one required string parameter, subscription_id",
+    "type": "manual",
+    "steps": [
+      "Run the service locally or on INT (AUTH_MODE=env or gateway)",
+      "Send initialize then tools/list over the MCP protocol",
+      "Find pax8_get_subscription in the returned tool list"
+    ],
+    "expect": "pax8_get_subscription is listed with inputSchema requiring exactly one property, subscription_id (string)",
+    "result": "pass",
+    "evidence": "Local smoke test (AUTH_MODE=env, PAX8_API_TOKEN=placeholder-token, MCP_TRANSPORT=http): initialize then tools/list over POST /mcp. Response includes {\"name\":\"pax8_get_subscription\",...,\"inputSchema\":{\"properties\":{\"subscription_id\":{\"title\":\"Subscription Id\",\"type\":\"string\"}},\"required\":[\"subscription_id\"],...}} -- exactly one required string parameter, subscription_id."
+  }
+]
