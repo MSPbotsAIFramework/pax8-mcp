@@ -18,6 +18,7 @@ EXPECTED_TOOL_NAMES = {
     "pax8_list_invoice_items",
     "pax8_list_orders",
     "pax8_list_products",
+    "pax8_get_product",
     "pax8_list_usage_summary_lines",
 }
 
@@ -45,7 +46,7 @@ async def test_tools_list_snapshot(mcp):
 
     names = {t.name for t in tools}
     assert names == EXPECTED_TOOL_NAMES
-    assert len(tools) == 11
+    assert len(tools) == 12
     for tool in tools:
         assert tool.description, f"{tool.name} is missing a description"
 

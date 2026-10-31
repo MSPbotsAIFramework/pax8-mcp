@@ -114,6 +114,7 @@ The service forwards the token as `Authorization: Bearer <token>` to the Pax8 AP
 | `pax8_list_invoice_items` | List line items for an invoice | `invoice_id`, `page`, `size` |
 | `pax8_list_orders` | List orders | `page`, `size`, `sort`, `company_id`, `status` |
 | `pax8_list_products` | List products in the Pax8 marketplace | `page`, `size`, `sort`, `vendor_name`, `product_name` |
+| `pax8_get_product` | Get a single product by id (name, vendor, SKU) | `product_id` |
 | `pax8_list_usage_summary_lines` | List usage lines for a usage summary | `usage_summary_id`, `page`, `size` |
 
 ### Parameter Details
