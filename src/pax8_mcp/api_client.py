@@ -50,6 +50,16 @@ class Pax8Client:
             self._raise_for_status(resp)
             return resp.json() if resp.status_code != 204 else None
 
+    async def put(self, path: str, json_body: dict | None = None) -> Any:
+        async with httpx.AsyncClient() as client:
+            resp = await client.put(
+                f"{self._base_url}{path}",
+                headers=self._headers(),
+                json=self._clean_params(json_body),
+            )
+            self._raise_for_status(resp)
+            return resp.json() if resp.status_code != 204 else None
+
     def _raise_for_status(self, resp: httpx.Response) -> None:
         if resp.status_code >= 400:
             try:
