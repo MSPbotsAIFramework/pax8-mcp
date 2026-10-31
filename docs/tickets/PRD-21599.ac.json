@@ -45,7 +45,8 @@
       "Find the 'Parameter Details' section"
     ],
     "expect": "A pax8_update_subscription row exists in the Tool List table with description and key parameters, in the same shape as the other 9 rows; Parameter Details documents the billingTerm enum (Monthly, Annual, 2-Year, 3-Year, 1-Time, Trial).",
-    "result": "untested"
+    "result": "pass",
+    "evidence": "README.md:111 adds the Tool List row '| `pax8_update_subscription` | Update a subscription's quantity, billing term, or dates | `subscription_id`, `quantity`, `billing_term`, `start_date`, `end_date` |' in the same shape as the other 9 rows; README.md:127-128 adds 'Parameter Details' entry '**`pax8_update_subscription` billing_term values:** Monthly, Annual, 2-Year, 3-Year, 1-Time, Trial'. Verified by grep on the work branch at commit 5aa01d3."
   },
   {
     "id": "TC7",
