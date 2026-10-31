@@ -109,6 +109,7 @@ The service forwards the token as `Authorization: Bearer <token>` to the Pax8 AP
 | `pax8_list_subscriptions` | List subscriptions | `page`, `size`, `sort`, `company_id`, `status`, `product_id` |
 | `pax8_get_subscription` | Get a single subscription by id | `subscription_id` |
 | `pax8_list_subscription_usage_summaries` | List usage summaries for a subscription | `subscription_id`, `page`, `size` |
+| `pax8_update_subscription` | Update a subscription's quantity, billing term, or dates | `subscription_id`, `quantity`, `billing_term`, `start_date`, `end_date` |
 | `pax8_list_invoices` | List invoices | `page`, `size`, `sort`, `company_id`, `status` |
 | `pax8_list_invoice_items` | List line items for an invoice | `invoice_id`, `page`, `size` |
 | `pax8_list_orders` | List orders | `page`, `size`, `sort`, `company_id`, `status` |
@@ -124,6 +125,9 @@ The service forwards the token as `Authorization: Bearer <token>` to the Pax8 AP
 
 **`pax8_list_subscriptions` status values:**
 `Active`, `Cancelled`, `PendingManual`, `PendingAutomated`, `PendingCancel`, `Terminated`, `Expired`, `Trial`
+
+**`pax8_update_subscription` billing_term values:**
+`Monthly`, `Annual`, `2-Year`, `3-Year`, `1-Time`, `Trial`
 
 ## Quick Start
 

@@ -1,0 +1,66 @@
+[
+  {
+    "id": "TC1",
+    "ac": "AC1",
+    "type": "auto",
+    "text": "Given a valid subscription_id, quantity, and a valid Pax8 credential, when pax8_update_subscription is called, then it sends PUT /subscriptions/{subscription_id} and returns the updated subscription JSON (id, quantity, status, billingTerm present).",
+    "tests": ["tests/test_tools.py::test_update_subscription_sends_put_and_returns_updated_subscription"]
+  },
+  {
+    "id": "TC2",
+    "ac": "AC2",
+    "type": "auto",
+    "text": "Given only subscription_id and quantity are passed, when pax8_update_subscription is called, then the outbound PUT body contains exactly {\"quantity\": ...} with no null keys for the omitted optional fields.",
+    "tests": ["tests/test_api_client.py::test_put_omits_none_fields_from_json_body"]
+  },
+  {
+    "id": "TC3",
+    "ac": "AC3",
+    "type": "auto",
+    "text": "Given no Pax8 credential is available, when pax8_update_subscription is called, then it returns the existing _NO_TOKEN message and makes zero HTTP calls.",
+    "tests": ["tests/test_tools.py::test_update_subscription_without_credentials_returns_no_token_message"]
+  },
+  {
+    "id": "TC4",
+    "ac": "AC4",
+    "type": "auto",
+    "text": "Given the Pax8 API returns a 4xx or 5xx response, when pax8_update_subscription is called, then it returns \"Error {status_code}: {message}\" and never raises an unhandled exception.",
+    "tests": ["tests/test_tools.py::test_update_subscription_maps_pax8_error_to_existing_error_format"]
+  },
+  {
+    "id": "TC5",
+    "ac": "AC5",
+    "type": "auto",
+    "text": "Given two concurrent calls to pax8_update_subscription carrying two different tenants' credentials, when both run at the same time, then each call's outbound Pax8 request carries only its own token.",
+    "tests": ["tests/test_middleware.py::test_concurrent_update_calls_do_not_leak_credentials_across_tenants"]
+  },
+  {
+    "id": "TC6",
+    "ac": "AC6",
+    "type": "manual",
+    "text": "The README documents the new tool consistent with the other 9 tools.",
+    "steps": [
+      "Open README.md on the work branch",
+      "Find the 'Tool List' table",
+      "Find the 'Parameter Details' section"
+    ],
+    "expect": "A pax8_update_subscription row exists in the Tool List table with description and key parameters, in the same shape as the other 9 rows; Parameter Details documents the billingTerm enum (Monthly, Annual, 2-Year, 3-Year, 1-Time, Trial).",
+    "result": "pass",
+    "evidence": "README.md:111 adds the Tool List row '| `pax8_update_subscription` | Update a subscription's quantity, billing term, or dates | `subscription_id`, `quantity`, `billing_term`, `start_date`, `end_date` |' in the same shape as the other 9 rows; README.md:127-128 adds 'Parameter Details' entry '**`pax8_update_subscription` billing_term values:** Monthly, Annual, 2-Year, 3-Year, 1-Time, Trial'. Verified by grep on the work branch at commit 5aa01d3."
+  },
+  {
+    "id": "TC7",
+    "ac": "AC1",
+    "type": "manual",
+    "source": "dev",
+    "text": "End-to-end confirmation against a real Pax8 sandbox account (optional, not blocking per SOP -- missing a vendor test account is not a blocker).",
+    "steps": [
+      "Obtain a real Pax8 partner API token with a test subscription",
+      "Call pax8_update_subscription with that subscription_id and a new quantity",
+      "Check the Pax8 partner console for the updated quantity"
+    ],
+    "expect": "The subscription's quantity in the Pax8 partner console matches the value sent.",
+    "result": "blocked",
+    "evidence": "No real Pax8 sandbox account is available to DEV01; this case cannot be executed in this environment. Not a blocker (SOP: missing a vendor test account does not block)."
+  }
+]
