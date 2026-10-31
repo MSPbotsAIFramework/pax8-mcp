@@ -49,6 +49,22 @@ def register(mcp: FastMCP, client_factory: Callable[[], Pax8Client | None]) -> N
             return f"Error {e.status_code}: {e.message}"
 
     @mcp.tool()
+    async def pax8_get_subscription(subscription_id: str) -> str:
+        """Get a single Pax8 subscription by id.
+
+        Args:
+            subscription_id: The unique identifier of the subscription.
+        """
+        client = client_factory()
+        if client is None:
+            return _NO_TOKEN
+        try:
+            result = await client.get(f"/subscriptions/{subscription_id}")
+            return json.dumps(result, indent=2)
+        except Pax8Error as e:
+            return f"Error {e.status_code}: {e.message}"
+
+    @mcp.tool()
     async def pax8_list_subscription_usage_summaries(
         subscription_id: str,
         page: int = 0,
