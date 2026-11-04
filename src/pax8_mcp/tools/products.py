@@ -43,3 +43,19 @@ def register(mcp: FastMCP, client_factory: Callable[[], Pax8Client | None]) -> N
             return json.dumps(result, indent=2)
         except Pax8Error as e:
             return f"Error {e.status_code}: {e.message}"
+
+    @mcp.tool()
+    async def pax8_get_product(product_id: str) -> str:
+        """Get a single product by id.
+
+        Args:
+            product_id: The unique identifier of the product.
+        """
+        client = client_factory()
+        if client is None:
+            return _NO_TOKEN
+        try:
+            result = await client.get(f"/products/{product_id}")
+            return json.dumps(result, indent=2)
+        except Pax8Error as e:
+            return f"Error {e.status_code}: {e.message}"
