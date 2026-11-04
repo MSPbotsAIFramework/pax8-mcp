@@ -106,6 +106,7 @@ The service forwards the token as `Authorization: Bearer <token>` to the Pax8 AP
 |------|-------------|----------------|
 | `pax8_list_companies` | List companies in the partner account | `page`, `size`, `sort`, `name` |
 | `pax8_list_company_contacts` | List contacts for a company | `company_id`, `page`, `size` |
+| `pax8_get_company` | Get a single company by id | `company_id` |
 | `pax8_list_subscriptions` | List subscriptions | `page`, `size`, `sort`, `company_id`, `status`, `product_id` |
 | `pax8_list_subscription_usage_summaries` | List usage summaries for a subscription | `subscription_id`, `page`, `size` |
 | `pax8_list_invoices` | List invoices | `page`, `size`, `sort`, `company_id`, `status` |

@@ -60,3 +60,19 @@ def register(mcp: FastMCP, client_factory: Callable[[], Pax8Client | None]) -> N
             return json.dumps(result, indent=2)
         except Pax8Error as e:
             return f"Error {e.status_code}: {e.message}"
+
+    @mcp.tool()
+    async def pax8_get_company(company_id: str) -> str:
+        """Get a single company by its Pax8 company id.
+
+        Args:
+            company_id: The unique identifier of the company.
+        """
+        client = client_factory()
+        if client is None:
+            return _NO_TOKEN
+        try:
+            result = await client.get(f"/companies/{company_id}")
+            return json.dumps(result, indent=2)
+        except Pax8Error as e:
+            return f"Error {e.status_code}: {e.message}"
