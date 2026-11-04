@@ -4,28 +4,44 @@
     "ac": "AC1",
     "text": "Given a valid Pax8 token and an existing company_id, when pax8_get_company is called, then it returns the company record as JSON including id, name, status, externalId",
     "type": "auto",
-    "tests": ["tests/tools/test_companies.py::test_pax8_get_company_returns_company_json"]
+    "tests": [
+      "tests/tools/test_companies.py::test_pax8_get_company_returns_company_json"
+    ],
+    "result": "pass",
+    "evidence": "uv run pytest tests/tools/test_companies.py::test_pax8_get_company_returns_company_json -q -> 1 passed (dev leg selftest, @ 75966b1)"
   },
   {
     "id": "TC-PAX8-002",
     "ac": "AC2",
     "text": "Given a company_id that Pax8 returns 404 for, when pax8_get_company is called, then it returns a structured 'Error 404: ...' string and does not raise an unhandled exception",
     "type": "auto",
-    "tests": ["tests/tools/test_companies.py::test_pax8_get_company_not_found_returns_structured_error"]
+    "tests": [
+      "tests/tools/test_companies.py::test_pax8_get_company_not_found_returns_structured_error"
+    ],
+    "result": "pass",
+    "evidence": "uv run pytest tests/tools/test_companies.py::test_pax8_get_company_not_found_returns_structured_error -q -> 1 passed (dev leg selftest, @ 75966b1)"
   },
   {
     "id": "TC-PAX8-003",
     "ac": "AC3",
     "text": "Given the server is in env auth mode with no PAX8_API_TOKEN configured (client_factory returns None), when pax8_get_company is called, then it returns the same 'No Pax8 token configured' diagnostic message the existing company tools return",
     "type": "auto",
-    "tests": ["tests/tools/test_companies.py::test_pax8_get_company_no_token_returns_diagnostic_message"]
+    "tests": [
+      "tests/tools/test_companies.py::test_pax8_get_company_no_token_returns_diagnostic_message"
+    ],
+    "result": "pass",
+    "evidence": "uv run pytest tests/tools/test_companies.py::test_pax8_get_company_no_token_returns_diagnostic_message -q -> 1 passed (dev leg selftest, @ 75966b1)"
   },
   {
     "id": "TC-PAX8-004",
     "ac": "AC4",
-    "text": "Given the MCP server has started with credentials available, when tools/list is requested, then pax8_get_company is present with a required string company_id parameter and the total tool count is 10",
+    "text": "Given the MCP server has started with credentials available, when tools/list is requested, then pax8_get_company is present with a required string company_id parameter and the total tool count is 13 (updated from the design-time count of 10: PRD-21600/PRD-21601 merged 3 more tools into master between design and this dev leg; see Self-test note)",
     "type": "auto",
-    "tests": ["tests/test_server.py::test_tools_list_includes_pax8_get_company"]
+    "tests": [
+      "tests/test_server.py::test_tools_list_includes_pax8_get_company"
+    ],
+    "result": "pass",
+    "evidence": "uv run pytest tests/test_server.py::test_tools_list_includes_pax8_get_company -q -> 1 passed (dev leg selftest, @ 75966b1); live smoke tools/list also showed 13 tools incl. pax8_get_company"
   },
   {
     "id": "TC-PAX8-005",
