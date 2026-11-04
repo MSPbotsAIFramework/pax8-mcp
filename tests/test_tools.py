@@ -10,6 +10,7 @@ BASE_URL = "https://api.pax8.com/v1"
 EXPECTED_TOOL_NAMES = {
     "pax8_list_companies",
     "pax8_list_company_contacts",
+    "pax8_get_company",
     "pax8_list_subscriptions",
     "pax8_get_subscription",
     "pax8_list_subscription_usage_summaries",
@@ -46,7 +47,7 @@ async def test_tools_list_snapshot(mcp):
 
     names = {t.name for t in tools}
     assert names == EXPECTED_TOOL_NAMES
-    assert len(tools) == 12
+    assert len(tools) == 13
     for tool in tools:
         assert tool.description, f"{tool.name} is missing a description"
 
