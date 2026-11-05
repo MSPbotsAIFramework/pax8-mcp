@@ -1,5 +1,7 @@
 # PRD-21602 · Code review
 
+Status: frozen @ 1a3e794
+
 ## Round 1 · 2026-11-05 · reviewed dev/PRD-21602 @ 75966b1 (base master @ 2f5137b)
 
 Verdict: approved
